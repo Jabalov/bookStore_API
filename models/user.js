@@ -24,7 +24,7 @@ const userSchema = new mongoose.Schema({
 
 userSchema.methods.generateAuthToken = function() {
   const token = jwt.sign(
-    { _id: this._id, isAdmin: this.isAdmin },
+    { _id: this._id, type: this.type },
     config.get("jwtPrivateKey")
   );
   return token;
@@ -52,5 +52,26 @@ function validateUser(user) {
   return Joi.validate(user, schema);
 }
 
+function loginValidation(body) {
+  const Schema = {
+    email: Joi.string()
+      .email({ minDomainAtoms: 2 })
+      .required(),
+    password: Joi.string()
+      .regex(/^[\w@-]{0,20}$/)
+      .required()
+  };
+  return Joi.validate(body, Schema);
+}
+
+async function createUser(body) {
+  let user = new User(body);
+  user = await user.save();
+
+  return user;
+}
+
 exports.User = User;
 exports.validate = validateUser;
+module.exports.loginValidate = loginValidation;
+module.exports.createUser = createUser;
