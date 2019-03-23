@@ -1,0 +1,29 @@
+{
+  "name": "library",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "*",
+    "config": "*",
+    "express": "*",
+    "express-async-errors": "*",
+    "express-generator": "^4.16.0",
+    "express-session": "^1.15.6",
+    "fawn": "*",
+    "joi": "*",
+    "joi-objectid": "*",
+    "jsonwebtoken": "*",
+    "lodash": "*",
+    "mongoose": "*",
+    "pug": "^2.0.3",
+    "winston": "*",
+    "winston-mongodb": "*"
+  }
+}
