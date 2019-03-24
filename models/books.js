@@ -1,53 +1,63 @@
 const Joi = require("joi");
 const mongoose = require("mongoose");
 const { categorySchema } = require("./category");
+Joi.objectId = require("joi-objectid")(Joi);
 
 const Book = mongoose.model(
-  "Books",
+  "Book",
   new mongoose.Schema({
-    title: {
+    name: {
       type: String,
-      required: true,
-      trim: true,
-      minlength: 5,
-      maxlength: 255
-    },
-    category: {
-      type: categorySchema,
       required: true
     },
-    numberInStock: {
+    author: String,
+    description: String,
+    pages_num: {
       type: Number,
-      required: true,
-      min: 0,
-      max: 255
+      required: true
     },
-    dailyRentalRate: {
+    ebook_price: {
       type: Number,
-      required: true,
-      min: 0,
-      max: 255
+      required: true
+    },
+    price: {
+      type: Number,
+      required: true
     }
   })
 );
 
-function validateBook(Book) {
-  const schema = {
-    title: Joi.string()
+function validation(body) {
+  const Schema = {
+    name: Joi.string()
+      .min(3)
+      .max(20)
+      .required(),
+    author: Joi.string()
       .min(5)
-      .max(50)
-      .required(),
-    categoryId: Joi.objectId().required(),
-    numberInStock: Joi.number()
-      .min(0)
-      .required(),
-    dailyRentalRate: Joi.number()
-      .min(0)
-      .required()
+      .max(20),
+    description: Joi.string()
+      .min(40)
+      .max(200),
+    pages_num: Joi.number().required(),
+    ebook_price: Joi.number().required(),
+    price: Joi.number().required()
   };
 
-  return Joi.validate(Book, schema);
+  return Joi.validate(body, Schema);
+}
+
+async function showBooks(query) {
+  const filter = qryHandle(query);
+  const books = await Book.find()
+    .and(filter.find)
+    .sort(filter.sort)
+    .limit(filter.limit)
+    .skip(filter.skip);
+
+  return books;
 }
 
 exports.Book = Book;
-exports.validate = validateBook;
+exports.validate = validation;
+module.exports.getBooks = showBooks;
